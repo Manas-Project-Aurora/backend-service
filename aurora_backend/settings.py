@@ -21,6 +21,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'users',
+    'board',
 ]
 
 MIDDLEWARE = [
@@ -99,3 +101,5 @@ REST_FRAMEWORK = {
 }
 
 ROOT_PATH = env.str('ROOT_PATH', default='').strip('/')
+
+AUTH_USER_MODEL = 'users.User'

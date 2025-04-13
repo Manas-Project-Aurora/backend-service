@@ -1,13 +1,17 @@
+from django.contrib.auth import authenticate
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from users.serializers.login import LoginInputSerializer
+from users.serializers.me import UserOutputSerializer
 from users.services.auth import login_user
 
 
 class UserLoginApi(APIView):
+    authentication_classes = []
+    permission_classes = []
 
     def post(self, request: Request) -> Response:
         serializer = LoginInputSerializer(data=request.data)
@@ -17,9 +21,11 @@ class UserLoginApi(APIView):
         email: str = data['email']
         password: str = data['password']
 
-        login_result = login_user(email=email, password=password)
+        user = authenticate(email=email, password=password)
+        login_result = login_user(user)
 
-        response = Response(status=status.HTTP_200_OK)
+        serializer = UserOutputSerializer(user)
+        response = Response(serializer.data, status.HTTP_200_OK)
         response.set_cookie(
             key='refresh_token',
             value=login_result.refresh_token,

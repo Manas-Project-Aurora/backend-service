@@ -1,7 +1,10 @@
 from dataclasses import dataclass
 
-from django.contrib.auth import authenticate
+from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
+
+
+User = get_user_model()
 
 
 @dataclass(frozen=True, slots=True)
@@ -12,8 +15,7 @@ class LoginResult:
     refresh_token_expires: int
 
 
-def login_user(*, email: str, password: str):
-    user = authenticate(email=email, password=password)
+def login_user(user: User):
     refresh_token = RefreshToken.for_user(user)
     access_token = str(refresh_token.access_token)
     access_token_expires: int = refresh_token.access_token['exp']

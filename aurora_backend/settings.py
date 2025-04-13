@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_standardized_errors',
     'users',
+    'community',
     'board',
 ]
 

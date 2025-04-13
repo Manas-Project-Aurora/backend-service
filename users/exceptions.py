@@ -27,3 +27,9 @@ class UserAlreadyExistsError(APIException):
     status_code = status.HTTP_409_CONFLICT
     default_code = "user_already_exists"
     default_detail = "User already exists."
+
+
+class UserNotFoundError(APIException):
+    status_code = status.HTTP_404_NOT_FOUND
+    default_code = "user_not_found"
+    default_detail = "User not found."

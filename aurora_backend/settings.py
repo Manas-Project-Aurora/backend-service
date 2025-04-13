@@ -123,6 +123,8 @@ REST_FRAMEWORK = {
 }
 
 ROOT_PATH = env.str('ROOT_PATH', default='').strip('/')
+if ROOT_PATH:
+    ROOT_PATH = f'{ROOT_PATH}/'
 
 AUTH_USER_MODEL = 'users.User'
 

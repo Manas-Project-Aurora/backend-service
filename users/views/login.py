@@ -4,6 +4,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from users.exceptions import UserNotFoundError
 from users.serializers.login import LoginInputSerializer
 from users.serializers.me import UserOutputSerializer
 from users.services.auth import login_user
@@ -22,6 +23,8 @@ class UserLoginApi(APIView):
         password: str = data['password']
 
         user = authenticate(email=email, password=password)
+        if not user:
+            raise UserNotFoundError
         login_result = login_user(user)
 
         serializer = UserOutputSerializer(user)

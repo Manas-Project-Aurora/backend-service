@@ -5,6 +5,8 @@ from rest_framework.views import APIView
 
 
 class UserLogoutApi(APIView):
+    authentication_classes = []
+    permission_classes = []
 
     def post(self, request: Request) -> Response:
         response = Response(status=status.HTTP_205_RESET_CONTENT)

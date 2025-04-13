@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from users.exceptions import UserAlreadyExistsError
+from users.serializers.me import UserOutputSerializer
 from users.serializers.register import UserRegisterInputSerializer
 
 from users.models import default_username, User
@@ -33,12 +34,10 @@ class UserRegisterApi(APIView):
         except IntegrityError:
             raise UserAlreadyExistsError
 
-        login_result = login_user(
-            email=user.email,
-            password=password,
-        )
+        login_result = login_user(user)
 
-        response = Response(status=status.HTTP_201_CREATED)
+        serializer = UserOutputSerializer(user)
+        response = Response(serializer.data, status.HTTP_201_CREATED)
         response.set_cookie(
             key='refresh_token',
             value=login_result.refresh_token,

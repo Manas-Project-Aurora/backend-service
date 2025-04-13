@@ -20,7 +20,7 @@ urlpatterns = [
         name='logout',
     ),
     path(
-        r'auth/login/',
+        r'auth/token/',
         UserLoginApi.as_view(),
         name='login',
     ),

@@ -1,3 +1,4 @@
+import datetime
 from pathlib import Path
 
 from environ import Env
@@ -111,4 +112,9 @@ AUTH_USER_MODEL = 'users.User'
 
 DRF_STANDARDIZED_ERRORS = {
     'EXCEPTION_FORMATTER_CLASS': 'users.exceptions.ExceptionFormatter',
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(hours=1),
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1),
 }

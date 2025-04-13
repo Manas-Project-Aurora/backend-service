@@ -1,13 +1,14 @@
-from django.contrib.auth import get_user_model
+from django.db import IntegrityError
 from rest_framework import status
+from rest_framework.exceptions import APIException
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from users.exceptions import UserAlreadyExistsError
 from users.serializers.register import UserRegisterInputSerializer
 
-
-User = get_user_model()
+from users.models import default_username, User
 
 
 class UserRegisterApi(APIView):
@@ -17,9 +18,16 @@ class UserRegisterApi(APIView):
         serializer.is_valid(raise_exception=True)
         data: dict = serializer.validated_data
 
-        username: str = data['username']
+        email: str = data['email']
         password: str = data['password']
 
-        User.objects.create_user(username=username, password=password)
+        try:
+            user = User.objects.create_user(
+                username=default_username(),
+                email=email,
+                password=password
+            )
+        except IntegrityError:
+            raise UserAlreadyExistsError
 
         return Response(status=status.HTTP_201_CREATED)

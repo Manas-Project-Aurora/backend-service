@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'drf_standardized_errors',
     'users',
     'board',
 ]
@@ -96,10 +97,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+        'users.authentication.HttpOnlyCookiesAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'EXCEPTION_HANDLER': "drf_standardized_errors.handler.exception_handler"
 }
 
 ROOT_PATH = env.str('ROOT_PATH', default='').strip('/')
 
 AUTH_USER_MODEL = 'users.User'
+
+DRF_STANDARDIZED_ERRORS = {
+    'EXCEPTION_FORMATTER_CLASS': 'users.exceptions.ExceptionFormatter',
+}

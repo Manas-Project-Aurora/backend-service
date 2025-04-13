@@ -1,18 +1,18 @@
 from django.urls import path
 from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
     TokenRefreshView,
 )
 
 from users.views.register import UserRegisterApi
+from users.views.login import UserLoginApi
 
 
 app_name = 'users'
 urlpatterns = [
     path(
-        r'auth/token/',
-        TokenObtainPairView.as_view(),
-        name='access-token',
+        r'auth/login/',
+        UserLoginApi.as_view(),
+        name='login',
     ),
     path(
         r'auth/token/refresh/',

@@ -11,6 +11,11 @@ from board.views import (
 app_name = 'board'
 urlpatterns = [
     path(
+        r'organizations/',
+        OrganizationListCreateApi.as_view(),
+        name='organization-list-create',
+    ),
+    path(
         r'vacancies/',
         VacancyListCreateApi.as_view(),
         name='vacancy-list-create',

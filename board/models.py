@@ -17,7 +17,11 @@ class OrganizationContact(models.Model):
         TELEGRAM = 'telegram', 'Telegram'
         WEBSITE = 'website', 'Website'
 
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    organization = models.ForeignKey(
+        to=Organization,
+        on_delete=models.CASCADE,
+        related_name='contacts',
+    )
     type = models.CharField(max_length=255, choices=Type.choices)
     value = models.CharField(max_length=1024)
     created_at = models.DateTimeField(auto_now_add=True)

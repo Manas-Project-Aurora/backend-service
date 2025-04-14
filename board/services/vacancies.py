@@ -2,6 +2,7 @@ import datetime
 from dataclasses import dataclass
 
 from board.models import Vacancy
+from board.services.common import Pagination
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -19,13 +20,6 @@ class VacancyListPageItem:
     user_id: int
     created_at: datetime.datetime
     updated_at: datetime.datetime
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
-class Pagination:
-    total_count: int
-    taken_count: int
-    skipped_count: int
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

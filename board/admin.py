@@ -1,10 +1,10 @@
 from django.contrib import admin
 
 from board.models import Organization, OrganizationContact, Vacancy
-
+from import_export.admin import ImportExportModelAdmin
 
 @admin.register(Organization)
-class OrganizationAdmin(admin.ModelAdmin):
+class OrganizationAdmin(ImportExportModelAdmin):
     pass
 
 
@@ -14,5 +14,5 @@ class OrganizationContactAdmin(admin.ModelAdmin):
 
 
 @admin.register(Vacancy)
-class VacancyAdmin(admin.ModelAdmin):
+class VacancyAdmin(ImportExportModelAdmin):
     pass

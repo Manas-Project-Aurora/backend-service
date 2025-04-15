@@ -23,7 +23,6 @@ class VacancyRetrieveUpdateDeleteApi(APIView):
             vacancy = Vacancy.objects.select_related('organization').get(id=vacancy_id)
         except Vacancy.DoesNotExist:
             raise VacancyNotFoundError
-
         serializer = VacancyRetrieveOutputSerializer(vacancy)
         return Response(serializer.data)
 

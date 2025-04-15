@@ -34,6 +34,7 @@ class VacancyListCreateApi(APIView):
         salary_from: int | None = data['salary_from']
         salary_to: int | None = data['salary_to']
         salary_types: list[Vacancy.SalaryType] | None = data['salary_types']
+        user_ids: list[int] | None = data['user_ids']
 
         vacancies_page = get_vacancies_page(
             take=take,
@@ -43,6 +44,7 @@ class VacancyListCreateApi(APIView):
             salary_from=salary_from,
             salary_to=salary_to,
             salary_types=salary_types,
+            user_ids=user_ids,
         )
 
         serializer = VacancyListOutputSerializer(vacancies_page)

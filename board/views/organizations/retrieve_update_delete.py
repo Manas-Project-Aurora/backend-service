@@ -2,8 +2,6 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from board.exceptions import OrganizationNotFoundError
-from board.models import Organization
 from board.serializers.organizations.retrieve import OrganizationRetrieveOutputSerializer
 from board.services.organizations import get_organization_details
 

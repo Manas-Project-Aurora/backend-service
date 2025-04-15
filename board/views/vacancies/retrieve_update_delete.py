@@ -4,10 +4,6 @@ from rest_framework.views import APIView
 
 from board.exceptions import VacancyNotFoundError
 from board.models import Vacancy
-from board.serializers.vacancies.list import (
-    VacancyListInputSerializer,
-    VacancyListOutputSerializer,
-)
 from board.serializers.vacancies.retrieve import VacancyRetrieveOutputSerializer
 
 

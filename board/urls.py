@@ -21,7 +21,7 @@ urlpatterns = [
         name='vacancy-list-create',
     ),
     path(
-        r'vacancies/<int:pk>/',
+        r'vacancies/<int:vacancy_id>/',
         VacancyRetrieveUpdateDeleteApi.as_view(),
         name='vacancy-retrieve-update-delete',
     ),
@@ -31,7 +31,7 @@ urlpatterns = [
         name='organization-list-create'
     ),
     path(
-        r'organizations/<int:pk>/',
+        r'organizations/<int:organization_id>/',
         OrganizationRetrieveUpdateDeleteApi.as_view(),
         name='organization-retrieve-update-delete',
     ),

@@ -1,6 +1,6 @@
 from rest_framework import serializers
-
 from board.serializers.organizations.list import OrganizationContactSerializer
+from board.services.organizations import get_organization_details
 
 
 class OrganizationRetrieveOutputSerializer(serializers.Serializer):

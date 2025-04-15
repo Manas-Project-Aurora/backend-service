@@ -31,6 +31,10 @@ class VacancyListInputSerializer(serializers.Serializer):
         child=serializers.ChoiceField(choices=Vacancy.SalaryType.choices),
         default=None,
     )
+    user_ids = serializers.ListField(
+        child=serializers.IntegerField(min_value=1),
+        default=None,
+    )
 
 
 class VacancyListItemSerializer(serializers.Serializer):

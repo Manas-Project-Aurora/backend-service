@@ -28,6 +28,7 @@ class VacancyRetrieveUpdateDeleteApi(APIView):
         salary_from: int | None = data['salary_from']
         salary_to: int | None = data['salary_to']
         salary_types: list[Vacancy.SalaryType] | None = data['salary_types']
+        user_ids: list[int] | None = data['user_ids']
 
         vacancies = Vacancy.objects.select_related('organization').filter(
             status__in=statuses,
@@ -42,6 +43,8 @@ class VacancyRetrieveUpdateDeleteApi(APIView):
             vacancies = vacancies.filter(salary_to__lte=salary_to)
         if salary_types is not None:
             vacancies = vacancies.filter(salary_type__in=salary_types)
+        if user_ids is not None:
+            vacancies = vacancies.filter(user_id__in=user_ids)
 
         total_count = vacancies.count()
         vacancies = vacancies[skip: skip + take]

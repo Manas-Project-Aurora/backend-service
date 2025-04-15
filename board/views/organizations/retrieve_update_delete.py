@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from board.exceptions import OrganizationNotFoundError
 from board.models import Organization
 from board.serializers.organizations.retrieve import OrganizationRetrieveOutputSerializer
+from board.services.organizations import get_organization_details
 
 
 class OrganizationRetrieveUpdateDeleteApi(APIView):
@@ -15,11 +16,7 @@ class OrganizationRetrieveUpdateDeleteApi(APIView):
         return super().get_permissions()
 
     def get(self, request: Request, organization_id: int) -> Response:
-        try:
-            organization = Organization.objects.get(id=organization_id)
-        except Organization.DoesNotExist:
-            raise OrganizationNotFoundError
-
+        organization = get_organization_details(organization_id)
         serializer = OrganizationRetrieveOutputSerializer(organization)
         return Response(serializer.data)
 

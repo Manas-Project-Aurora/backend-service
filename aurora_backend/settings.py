@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'users',
     'community',
     'board',
+    'import_export',
 ]
 
 MIDDLEWARE = [

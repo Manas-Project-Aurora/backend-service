@@ -36,6 +36,7 @@ def get_vacancies_page(
         salary_from: int | None,
         salary_to: int | None,
         salary_types: list[Vacancy.SalaryType] | None,
+        user_ids: list[int] | None,
 ) -> VacancyListPage:
     vacancies = (
         Vacancy.objects
@@ -51,6 +52,8 @@ def get_vacancies_page(
         vacancies = vacancies.filter(salary_to__lte=salary_to)
     if salary_types is not None:
         vacancies = vacancies.filter(salary_type__in=salary_types)
+    if user_ids is not None:
+        vacancies = vacancies.filter(user_id__in=user_ids)
 
     total_count = vacancies.count()
     vacancies = vacancies[skip: skip + take]

@@ -1,9 +1,10 @@
 import datetime
 from dataclasses import dataclass
 
-from board.exceptions import VacancyNotFoundError, VacancyAccessDenied
+from board.exceptions import VacancyNotFoundError, VacancyAccessDenied, VacancyIsNotPendingError
 from board.models import Vacancy
 from board.services.common import Pagination
+from users.models import User
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -121,3 +122,33 @@ def delete_vacancy(vacancy_id: int, user_id: int) -> None:
         raise VacancyAccessDenied
 
     vacancy.delete()
+
+def approve_vacancy(vacancy_id: int, user: User) -> None:
+    try:
+        vacancy = Vacancy.objects.select_related('user').get(id=vacancy_id)
+    except Vacancy.DoesNotExist:
+        raise VacancyNotFoundError
+
+    if vacancy.user.id != user.id:
+        raise VacancyAccessDenied
+
+    if vacancy.status != Vacancy.Status.PENDING:
+        raise VacancyIsNotPendingError
+
+    vacancy.status = Vacancy.Status.APPROVED
+    vacancy.save()
+
+def reject_vacancy(vacancy_id: int, user: User):
+    try:
+        vacancy = Vacancy.objects.select_related('user').get(id=vacancy_id)
+    except Vacancy.DoesNotExist:
+        raise VacancyNotFoundError
+
+    if vacancy.user.id != user.id:
+        raise VacancyAccessDenied
+
+    if vacancy.status != Vacancy.Status.PENDING:
+        raise VacancyIsNotPendingError
+
+    vacancy.status = Vacancy.Status.REJECTED
+    vacancy.save()

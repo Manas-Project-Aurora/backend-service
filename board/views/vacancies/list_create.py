@@ -1,13 +1,15 @@
+from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from board.models import Vacancy
+from board.serializers.vacancies.create import VacancyCreateInputSerializer
 from board.serializers.vacancies.list import (
     VacancyListInputSerializer,
     VacancyListOutputSerializer,
 )
-from board.services.vacancies import get_vacancies_page
+from board.services.vacancies import create_vacancy, get_vacancies_page
 
 
 class VacancyListCreateApi(APIView):
@@ -51,4 +53,26 @@ class VacancyListCreateApi(APIView):
         return Response(serializer.data)
 
     def post(self, request: Request) -> Response:
-        return Response()
+        serializer = VacancyCreateInputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data: dict = serializer.validated_data
+        title: str = data['title']
+        description: str = data['description']
+        organization_id: int = data['organization_id']
+        salary_from: int | None = data['salary_from']
+        salary_to: int | None = data['salary_to']
+        type: str = data['type']
+        salary_type: str = data['salary_type']
+
+        create_vacancy(
+            user_id=request.user.id,
+            title=title,
+            description=description,
+            organization_id=organization_id,
+            salary_from=salary_from,
+            salary_to=salary_to,
+            type=type,
+            salary_type=salary_type,
+        )
+
+        return Response(status=status.HTTP_201_CREATED)

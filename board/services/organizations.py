@@ -3,9 +3,10 @@ from dataclasses import dataclass
 
 from django.db.models import Count, QuerySet
 
-from board.exceptions import OrganizationNotFoundError
+from board.exceptions import OrganizationNotFoundError, OrganizationAccessDenied
 from board.models import Organization, Vacancy
 from board.services.common import Pagination
+from users.models import User
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -153,3 +154,14 @@ def get_organization_details(organization_id: int) -> OrganizationRetrieveItem:
         event_count=event_count,
         video_count=video_count,
     )
+
+def delete_organization(organization_id: int, user: User) -> None:
+    try:
+        organization = Organization.objects.get(id=organization_id)
+    except Organization.DoesNotExist:
+        raise OrganizationNotFoundError
+
+    if not user.is_admin:
+        raise OrganizationAccessDenied
+
+    organization.delete()

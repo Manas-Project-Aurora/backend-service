@@ -3,38 +3,26 @@ from django.urls import reverse
 from rest_framework import status
 
 from board.models import Vacancy
-from board.tests.factories import VacancyFactory
+from board.tests.factories import OrganizationFactory
 
 
 @pytest.mark.django_db
-def test_vacancy_deleted(user, authenticated_client):
-    vacancy = VacancyFactory(user=user)
-    url = reverse('board:vacancy-retrieve-update-delete', kwargs={'vacancy_id': vacancy.id})
+def test_vacancy_create_api(user, authenticated_client):
+    url = reverse('board:vacancy-list-create')
+    organization = OrganizationFactory()
 
-    response = authenticated_client.delete(url)
+    response = authenticated_client.post(
+        url,
+        format='json',
+        data={
+            'title': 'Test Vacancy',
+            'description': 'Test Description',
+            'organization_id': organization.id,
+            'type': Vacancy.Type.REMOTE,
+            'salary_type': Vacancy.SalaryType.HOURLY,
+            'salary_from': 1000,
+            'salary_to': 1000,
+        },
+    )
 
-    with pytest.raises(Vacancy.DoesNotExist):
-        vacancy.refresh_from_db()
-
-    assert response.status_code == status.HTTP_204_NO_CONTENT
-
-
-@pytest.mark.django_db
-def test_vacancy_does_not_belong_user(user, authenticated_client):
-    vacancy = VacancyFactory()
-    url = reverse('board:vacancy-retrieve-update-delete', kwargs={'vacancy_id': vacancy.id})
-
-    response = authenticated_client.delete(url)
-    assert response.json()['errors'][0]['code'] == 'vacancy_access_denied'
-
-    assert response.status_code == status.HTTP_403_FORBIDDEN
-
-
-@pytest.mark.django_db
-def test_vacancy_does_not_belong_user(user, authenticated_client):
-    url = reverse('board:vacancy-retrieve-update-delete', kwargs={'vacancy_id': 123456})
-
-    response = authenticated_client.delete(url)
-    assert response.json()['errors'][0]['code'] == 'vacancy_not_found'
-
-    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert response.status_code == status.HTTP_201_CREATED

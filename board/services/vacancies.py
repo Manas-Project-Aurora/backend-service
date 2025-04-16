@@ -1,6 +1,7 @@
 import datetime
 from dataclasses import dataclass
 
+from board.exceptions import VacancyNotFoundError, VacancyAccessDenied
 from board.models import Vacancy
 from board.services.common import Pagination
 
@@ -109,3 +110,14 @@ def create_vacancy(
     )
     vacancy.full_clean()
     vacancy.save()
+
+def delete_vacancy(vacancy_id: int, user_id: int) -> None:
+    try:
+        vacancy = Vacancy.objects.select_related('user').get(id=vacancy_id)
+    except Vacancy.DoesNotExist:
+        raise VacancyNotFoundError
+
+    if vacancy.user.id != user_id:
+        raise VacancyAccessDenied
+
+    vacancy.delete()

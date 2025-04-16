@@ -11,3 +11,8 @@ class OrganizationNotFoundError(APIException):
     status_code = status.HTTP_404_NOT_FOUND
     default_code = "organization_not_found"
     default_detail = "Organization not found."
+
+class VacancyAccessDenied(APIException):
+    status_code = status.HTTP_403_FORBIDDEN
+    default_code = "vacancy_access_denied"
+    default_detail = "Vacancy access denied."

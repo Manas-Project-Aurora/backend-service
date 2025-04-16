@@ -7,7 +7,7 @@ from board.tests.factories import OrganizationFactory
 
 
 @pytest.mark.django_db
-def test_vacancy_successfully_created(user, authenticated_client):
+def test_vacancy_create_api(user, authenticated_client):
     url = reverse('board:vacancy-list-create')
     organization = OrganizationFactory()
 

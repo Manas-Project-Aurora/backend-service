@@ -7,7 +7,7 @@ from users.tests.factories import UserFactory
 
 @pytest.fixture
 def user():
-    return UserFactory()
+    return UserFactory(is_admin=True)
 
 
 @pytest.fixture

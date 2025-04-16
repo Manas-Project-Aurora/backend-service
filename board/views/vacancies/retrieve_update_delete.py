@@ -25,5 +25,24 @@ class VacancyRetrieveUpdateDeleteApi(APIView):
     def put(self, request: Request) -> Response:
         return Response()
 
-    def delete(self, request: Request) -> Response:
-        return Response()
+    def delete(self, request: Request, vacancy_id: int) -> Response:
+        try:
+            vacancy = Vacancy.objects.get(id=vacancy_id)
+        except Vacancy.DoesNotExist:
+            raise VacancyNotFoundError
+
+        # if not request.user.is_authenticated:
+        #     return Response(
+        #         {"error": "Для удаления вакансии необходимо авторизоваться"},
+        #         status=401
+        #     )
+
+        if vacancy.user != request.user:
+            return Response(
+                {"error": "У вас нет прав для удаления этой вакансии"},
+                status=403
+            )
+
+        vacancy.delete()
+
+        return Response(status=204)

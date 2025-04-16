@@ -83,3 +83,29 @@ def get_vacancies_page(
             skipped_count=skip,
         ),
     )
+
+
+def create_vacancy(
+        *,
+        user_id: int,
+        title: str,
+        description: str,
+        organization_id: int,
+        salary_from: int | None,
+        salary_to: int | None,
+        type: str,
+        salary_type: str,
+) -> None:
+    vacancy = Vacancy(
+        user_id=user_id,
+        title=title,
+        description=description,
+        organization_id=organization_id,
+        salary_from=salary_from,
+        salary_to=salary_to,
+        type=type,
+        salary_type=salary_type,
+        status=Vacancy.Status.PENDING,
+    )
+    vacancy.full_clean()
+    vacancy.save()

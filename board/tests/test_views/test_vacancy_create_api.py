@@ -3,26 +3,38 @@ from django.urls import reverse
 from rest_framework import status
 
 from board.models import Vacancy
-from board.tests.factories import OrganizationFactory
+from board.tests.factories import VacancyFactory
 
 
 @pytest.mark.django_db
-def test_vacancy_successfully_created(user, authenticated_client):
-    url = reverse('board:vacancy-list-create')
-    organization = OrganizationFactory()
+def test_vacancy_deleted(user, authenticated_client):
+    vacancy = VacancyFactory(user=user)
+    url = reverse('board:vacancy-retrieve-update-delete', kwargs={'vacancy_id': vacancy.id})
 
-    response = authenticated_client.post(
-        url,
-        format='json',
-        data={
-            'title': 'Test Vacancy',
-            'description': 'Test Description',
-            'organization_id': organization.id,
-            'type': Vacancy.Type.REMOTE,
-            'salary_type': Vacancy.SalaryType.HOURLY,
-            'salary_from': 1000,
-            'salary_to': 1000,
-        },
-    )
+    response = authenticated_client.delete(url)
 
-    assert response.status_code == status.HTTP_201_CREATED
+    with pytest.raises(Vacancy.DoesNotExist):
+        vacancy.refresh_from_db()
+
+    assert response.status_code == status.HTTP_204_NO_CONTENT
+
+
+@pytest.mark.django_db
+def test_vacancy_does_not_belong_user(user, authenticated_client):
+    vacancy = VacancyFactory()
+    url = reverse('board:vacancy-retrieve-update-delete', kwargs={'vacancy_id': vacancy.id})
+
+    response = authenticated_client.delete(url)
+    assert response.json()['errors'][0]['code'] == 'vacancy_access_denied'
+
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+
+
+@pytest.mark.django_db
+def test_vacancy_does_not_belong_user(user, authenticated_client):
+    url = reverse('board:vacancy-retrieve-update-delete', kwargs={'vacancy_id': 123456})
+
+    response = authenticated_client.delete(url)
+    assert response.json()['errors'][0]['code'] == 'vacancy_not_found'
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND

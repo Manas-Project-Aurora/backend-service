@@ -48,6 +48,8 @@ class Vacancy(models.Model):
         PENDING = 'pending', 'Pending'
         ACTIVE = 'active', 'Active'
         SUSPENDED = 'suspended', 'Suspended'
+        REJECTED = 'rejected', 'Rejected'
+        APPROVED = 'approved', 'Approved'
 
     organization = models.ForeignKey(
         to=Organization,

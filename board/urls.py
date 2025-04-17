@@ -6,7 +6,8 @@ from board.views import (
     VacancyListCreateApi,
     VacancyRetrieveUpdateDeleteApi,
 )
-
+from board.views.vacancies.approve import VacancyApproveApi
+from board.views.vacancies.reject import VacancyRejectApi
 
 app_name = 'board'
 urlpatterns = [
@@ -34,5 +35,15 @@ urlpatterns = [
         r'organizations/<int:organization_id>/',
         OrganizationRetrieveUpdateDeleteApi.as_view(),
         name='organization-retrieve-update-delete',
+    ),
+    path(
+        r'vacancies/<int:vacancy_id>/approve/',
+        VacancyApproveApi.as_view(),
+        name='vacancy-approve',
+    ),
+    path(
+        r'vacancies/<int:vacancy_id>/reject/',
+        VacancyRejectApi.as_view(),
+        name='vacancy-reject',
     ),
 ]

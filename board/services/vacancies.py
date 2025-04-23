@@ -1,6 +1,9 @@
 import datetime
 from dataclasses import dataclass
 
+from django.conf import settings
+from telebot import TeleBot
+
 from board.exceptions import VacancyNotFoundError, VacancyAccessDenied, VacancyIsNotPendingError
 from board.models import Vacancy
 from board.services.common import Pagination

@@ -141,6 +141,8 @@ SIMPLE_JWT = {
 
 STATIC_ROOT = BASE_DIR / 'static'
 
+TELEGRAM_BOT_TOKEN = env.str('TELEGRAM_BOT_TOKEN', default=None)
+
 if DEBUG:
     INSTALLED_APPS.append('silk')
     MIDDLEWARE.append('silk.middleware.SilkyMiddleware')

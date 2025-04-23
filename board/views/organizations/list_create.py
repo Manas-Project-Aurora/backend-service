@@ -1,11 +1,17 @@
+from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from board.serializers.organizations.create import \
+    OrganizationCreateInputSerializer
 from board.serializers.organizations.list import (
     OrganizationListInputSerializer, OrganizationListOutputSerializer,
 )
-from board.services.organizations import get_organizations_page
+from board.services.organizations import (
+    create_organization,
+    get_organizations_page,
+)
 
 
 class OrganizationListCreateApi(APIView):
@@ -34,4 +40,13 @@ class OrganizationListCreateApi(APIView):
         return Response(serializer.data)
 
     def post(self, request: Request) -> Response:
-        return Response()
+        serializer = OrganizationCreateInputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data: dict = serializer.validated_data
+
+        name: str = data['name']
+        description: str | None = data['description']
+
+        create_organization(name=name, description=description)
+
+        return Response(status=status.HTTP_201_CREATED)

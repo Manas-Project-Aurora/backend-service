@@ -3,7 +3,10 @@ from dataclasses import dataclass
 
 from django.db.models import Count, QuerySet
 
-from board.exceptions import OrganizationNotFoundError, OrganizationAccessDenied
+from board.exceptions import (
+    OrganizationNotFoundError,
+    OrganizationAccessDenied,
+)
 from board.models import Organization, Vacancy
 from board.services.common import Pagination
 from users.models import User
@@ -120,7 +123,9 @@ class OrganizationRetrieveItem:
 
 def get_organization_details(organization_id: int) -> OrganizationRetrieveItem:
     try:
-        organization = Organization.objects.prefetch_related('contacts').get(id=organization_id)
+        organization = Organization.objects.prefetch_related('contacts').get(
+            id=organization_id
+            )
     except Organization.DoesNotExist:
         raise OrganizationNotFoundError
 
@@ -155,6 +160,7 @@ def get_organization_details(organization_id: int) -> OrganizationRetrieveItem:
         video_count=video_count,
     )
 
+
 def delete_organization(organization_id: int, user: User) -> None:
     try:
         organization = Organization.objects.get(id=organization_id)
@@ -165,3 +171,15 @@ def delete_organization(organization_id: int, user: User) -> None:
         raise OrganizationAccessDenied
 
     organization.delete()
+
+
+def create_organization(
+        name: str,
+        description: str | None,
+) -> None:
+    organization = Organization(
+        name=name,
+        description=description,
+    )
+    organization.full_clean()
+    organization.save()

@@ -60,8 +60,10 @@ def get_organizations_page(
             organization_id__in=organization_ids,
             status=Vacancy.Status.ACTIVE,
         )
-        .annotate(count=Count('organization_id'))
-        .values('organization_id', 'count')
+        .values(
+            'organization_id'
+        )
+        .annotate(count=Count('id'))
     )
     organization_id_to_vacancy_count = {
         vacancy['organization_id']: vacancy['count']

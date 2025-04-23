@@ -60,7 +60,7 @@ def get_organizations_page(
             organization_id__in=organization_ids,
             status=Vacancy.Status.ACTIVE,
         )
-        .annotate(count=Count('id'))
+        .annotate(count=Count('organization_id'))
         .values('organization_id', 'count')
     )
     organization_id_to_vacancy_count = {
@@ -125,7 +125,7 @@ def get_organization_details(organization_id: int) -> OrganizationRetrieveItem:
     try:
         organization = Organization.objects.prefetch_related('contacts').get(
             id=organization_id
-            )
+        )
     except Organization.DoesNotExist:
         raise OrganizationNotFoundError
 

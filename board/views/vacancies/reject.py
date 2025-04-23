@@ -7,9 +7,9 @@ from board.services.vacancies import reject_vacancy
 
 
 class VacancyRejectApi(APIView):
-    def post(self, request: Request, vacancy_id: int) -> Response:
-        authentication_classes = []
-        permission_classes = []
+    authentication_classes = []
+    permission_classes = []
 
+    def post(self, request: Request, vacancy_id: int) -> Response:
         reject_vacancy(vacancy_id, request.user)
         return Response(status=status.HTTP_204_NO_CONTENT)
